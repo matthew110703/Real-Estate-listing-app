@@ -13,7 +13,7 @@ const Button = ({
       aria-label={text}
       type={type}
       onClick={onClick}
-      className={`bg-primary flex transform items-center gap-x-2 rounded-lg px-4 py-2 text-sm tracking-wide text-white shadow shadow-gray-400 transition duration-300 ease-out hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
+      className={`bg-primary flex transform items-center justify-center gap-x-2 rounded-lg px-4 py-2 text-sm tracking-wide text-white shadow shadow-gray-400 transition duration-300 ease-out hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-90 ${className}`}
       disabled={disabled}
       hidden={hidden}
       {...rest}
