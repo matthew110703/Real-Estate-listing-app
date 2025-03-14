@@ -17,3 +17,30 @@ body {
     font-family: 'Poppins', sans-serif;
     color: var(--color-primary);
 }
+
+details {
+    @apply mt-2 px-2 rounded-lg py-4 border-b space-y-2 shadow md:w-5/6
+}
+
+summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    @apply  text-lg sm:text-xl font-semibold
+  }
+  
+  summary::after {
+    content: "▶"; /* Closed state */
+    margin-right: 8px;
+    transition: transform 0.2s;
+  }
+  
+  details[open] summary::after {
+    content: "▼"; /* Open state */
+  }
+
+  details[open] {
+    @apply bg-gray-100
+  }
+  
+
