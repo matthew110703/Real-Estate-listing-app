@@ -10,7 +10,7 @@ const Hero = () => {
           here to guide you every step of the way.
         </p>
       </div>
-      <figure className="px-4">
+      <figure className="lg:px-4">
         <img
           src="/hero.jpg"
           alt="Hero Image"

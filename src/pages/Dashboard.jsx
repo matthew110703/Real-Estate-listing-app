@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Layout
@@ -11,64 +11,109 @@ import { auth } from "../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 // Redux
-// import { useDispatch } from "react-redux";
-// import { setToast } from "../store/toastSlice";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useGetPropertiesQuery } from "../store/apiSlice";
+import { setPage } from "../store/filterSlice";
 
 // Constants
 import { agents } from "../lib/constants";
-import listings from "../lib/listings.json";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  const params = useSelector((state) => state.filter, shallowEqual);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        // Redirect to login
         console.log("User not logged in");
-        // Redirect
+        setIsAuthenticated(false);
         navigate("/");
+      } else {
+        setIsAuthenticated(true);
       }
     });
 
     return unsubscribe;
   }, [navigate]);
 
+  const { data, error, isLoading, isFetching } = useGetPropertiesQuery(params);
+
+  // Memoized Listings
+  const regularListings = useMemo(
+    () => data?.data?.listings?.regular || [],
+    [data],
+  );
+  const featuredListings = useMemo(
+    () => data?.data?.listings?.featured || [],
+    [data],
+  );
+
+  // Handle page navigation
+  const handlePageChange = (direction) => {
+    if (direction === "next") dispatch(setPage(params.page + 1));
+    if (direction === "prev" && params.page > 1)
+      dispatch(setPage(params.page - 1));
+  };
+
+  if (isAuthenticated === false) return null; // Prevents unnecessary renders before redirection
+
   return (
     <>
       <Header />
       <Hero />
       <SearchFilters />
+
+      {/* Listings Section */}
       <section id="listings" className="px-3 py-6">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {listings?.data?.listings?.regular?.map((property) => (
-            <PropertyCard
-              key={property?.listingId || property?.title}
-              property={property}
-            />
-          ))}
-        </div>
+        {isLoading || isFetching ? (
+          <p className="my-16 text-center text-xl font-semibold">Loading...</p>
+        ) : error ? (
+          <p className="my-16 text-center text-xl font-semibold text-red-600">
+            An Error Occurred. Please try again later.
+          </p>
+        ) : regularListings.length === 0 ? (
+          <p className="my-16 text-center text-xl font-semibold">
+            No properties found
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {regularListings.map((property) => (
+              <PropertyCard
+                key={property?.listingId || property?.title}
+                property={property}
+              />
+            ))}
+          </div>
+        )}
+
         {/* Pagination */}
         <div className="mt-6 flex items-center justify-center gap-x-4">
-          <Button text={"Previous"} />
+          <Button
+            text={"Previous"}
+            onClick={() => handlePageChange("prev")}
+            disabled={params.page === 1}
+          />
           <div className="bg-primary my-auto rounded-lg px-4 py-2 text-center font-semibold text-white">
-            1
+            {params?.page}
           </div>
-          <Button text={"Next"} />
+          <Button text={"Next"} onClick={() => handlePageChange("next")} />
         </div>
       </section>
 
       <hr />
 
-      {/* Featured Section */}
+      {/* Featured Listings */}
       <section className="container mx-auto my-8 space-y-2">
-        <h2 className="px-2 text-3xl font-semibold shadow">Featured </h2>
+        <h2 className="px-2 text-3xl font-semibold shadow">Featured</h2>
         <div className="grid snap-x snap-mandatory auto-cols-max grid-flow-col gap-6 overflow-x-auto p-3 max-sm:[&::-webkit-scrollbar]:hidden">
-          {listings?.data?.listings?.featured?.map((property) => (
+          {featuredListings.map((property) => (
             <PropertyCard
               key={property?.listingId || property?.title}
               property={property}
-              className={"snap-center max-sm:max-w-sm"}
+              className={"min-w-full snap-center max-sm:max-w-sm"}
             />
           ))}
         </div>
@@ -81,7 +126,7 @@ const Dashboard = () => {
       >
         <div className="space-y-4">
           <div className="space-y-2">
-            <h2 className="font- text-4xl">Sell with top agents</h2>
+            <h2 className="text-4xl font-bold">Sell with top agents</h2>
             <p className="text-sm">
               Skip the hustle and let the pros get things done
             </p>
@@ -96,6 +141,7 @@ const Dashboard = () => {
           ))}
         </div>
       </section>
+
       <Footer />
     </>
   );

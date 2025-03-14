@@ -1,10 +1,21 @@
 import { Link } from "react-router-dom";
 // UI
 import { Branding, CustomLink } from "../ui";
+// Icons
+import { RiInstagramLine } from "react-icons/ri";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaLinkedinIn, FaFacebookF } from "react-icons/fa";
 // Constants
 import { quickLinks } from "../../lib/constants";
 
 const Footer = () => {
+  const socialIcons = {
+    facebook: <FaFacebookF />,
+    twitter: <FaXTwitter />,
+    instagram: <RiInstagramLine />,
+    linkedin: <FaLinkedinIn />,
+  };
+
   return (
     <footer className="mx-auto mt-6 space-y-6 p-3 md:p-6">
       <div className="flex flex-col-reverse justify-between gap-6 lg:flex-row">
@@ -82,13 +93,8 @@ const Footer = () => {
         {/* Social Links */}
         <div className="flex justify-center gap-4">
           {quickLinks?.social?.map((link) => (
-            <Link to={"#"} key={link}>
-              <img
-                src="https://placehold.co/32"
-                alt={link}
-                width={32}
-                height={32}
-              />
+            <Link to={"#"} key={link} className="h-8 w-8">
+              {socialIcons[link]}
             </Link>
           ))}
         </div>

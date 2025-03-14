@@ -9,9 +9,28 @@ import IconButton from "./IconButton";
 import { MdFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 import { BsFillGeoAltFill } from "react-icons/bs";
 
+// Redux
+import { useDispatch } from "react-redux";
+import { setToast } from "../../store/toastSlice";
+
 const PropertyCard = ({ property, className }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isFavorited, setIsFavorited] = useState(false);
+
+  const handleFavorite = (e) => {
+    e.stopPropagation();
+    setIsFavorited(!isFavorited);
+    dispatch(
+      setToast({
+        message: isFavorited
+          ? "Property removed from favorites"
+          : "Property added to favorites",
+        type: "success",
+      }),
+    );
+  };
+
   return (
     <article
       role="button"
@@ -21,23 +40,20 @@ const PropertyCard = ({ property, className }) => {
       <p className="text-xs font-light">
         Brokered by {property.agent.branchName}
       </p>
-      <figure className="relative">
+      <figure className="relative bg-gray-100">
         <p className="absolute top-0 left-0 m-2 rounded-3xl bg-white px-2 py-0.5 text-xs font-semibold">
           {property?.flag}
         </p>
         <img
           src={property.imageUris[0]}
           alt="thumbnail"
-          className="w-fit rounded-lg"
+          className="mx-auto max-h-[300px] w-fit rounded-lg"
         />
         {/* Favorite Button */}
         <IconButton
           icon={isFavorited ? <MdFavorite /> : <MdOutlineFavoriteBorder />}
           className={"absolute right-0 bottom-0 m-2 text-3xl text-white"}
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsFavorited(!isFavorited);
-          }}
+          onClick={handleFavorite}
         />
         <a
           role="button"

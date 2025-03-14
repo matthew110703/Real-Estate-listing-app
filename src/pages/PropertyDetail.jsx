@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 // Layout
 import { Header, Footer } from "../components/layout";
@@ -15,7 +16,10 @@ import {
 import { BsFillGeoAltFill } from "react-icons/bs";
 import { FaRegShareFromSquare, FaSchool } from "react-icons/fa6";
 
-import propertyDetail from "../lib/property_detail.json";
+// Redux
+import { useGetPropertyQuery } from "../store/apiSlice";
+import { useDispatch } from "react-redux";
+import { setToast } from "../store/toastSlice";
 
 // Currency Formatter
 const formatCurrency = (amount, currency = "GBP") => {
@@ -29,28 +33,69 @@ const formatCurrency = (amount, currency = "GBP") => {
 
 const PropertyDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [favorite, setFavorite] = useState(false);
 
-  const property = propertyDetail?.data?.listingDetails;
+  const { data, error, isLoading } = useGetPropertyQuery(id);
+  const property = data?.data?.listingDetails;
 
-  console.log(property);
+  if (isLoading || !property) {
+    return (
+      <>
+        <Header />
+        <p className="my-16 text-center text-2xl font-semibold">Loading...</p>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Header />
+        <p className="my-16 text-center text-2xl font-semibold">
+          {error?.data?.message || "An error occurred"}
+        </p>
+        <Footer />
+      </>
+    );
+  }
+
+  const handleFavorite = () => {
+    setFavorite((prev) => !prev);
+    // Dispatch toast
+    dispatch(
+      setToast({ message: "Property added to favorites", type: "success" }),
+    );
+  };
 
   return (
     <>
       <Header />
+
       <section className="container mx-auto px-4 py-8">
-        <button className="py-2 hover:underline">{"<"} Go Back</button>
+        <button className="py-2 hover:underline" onClick={() => navigate(-1)}>
+          {"<"} Go Back
+        </button>
 
         <div className="flex gap-4">
           {/* Carousel */}
-          <Carousel images={property.propertyImage} />
+          <Carousel images={property?.propertyImage} />
 
           {/* Contact */}
           <div className="hidden w-2/6 flex-col gap-y-4 rounded-lg p-4 shadow lg:flex">
             <div className="flex items-center gap-x-2 self-end">
               {/* Favorite Button */}
               <IconButton
-                icon={<MdOutlineFavoriteBorder size={28} />}
-                onClick={() => {}}
+                icon={
+                  favorite ? (
+                    <MdFavorite size={28} />
+                  ) : (
+                    <MdOutlineFavoriteBorder size={28} />
+                  )
+                }
+                onClick={handleFavorite}
               />
 
               {/* Geolocation */}
@@ -109,11 +154,11 @@ const PropertyDetail = () => {
         <div className="flex flex-col gap-y-2">
           <p className="align-middle text-sm font-semibold">
             <span
-              className={`mr-1 align-middle text-4xl ${property.publicationStatus === "Live" ? "text-green-600" : "text-red-600"}`}
+              className={`mr-1 align-middle text-4xl ${property?.publicationStatus === "Live" ? "text-green-600" : "text-red-600"}`}
             >
               •
             </span>
-            {property.title}
+            {property?.title}
           </p>
 
           <h2 className="text-3xl font-bold">
