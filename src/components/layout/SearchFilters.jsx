@@ -35,7 +35,7 @@ const SearchFilters = () => {
   const [search, setSearch] = useState(location || "");
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
-  const debouncedSearch = useDebounce(search, 1500);
+  const debouncedSearch = useDebounce(search, 1000);
 
   const handlePriceRange = (e) => {
     const { name, value } = e.target;
