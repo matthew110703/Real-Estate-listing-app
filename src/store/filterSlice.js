@@ -7,6 +7,7 @@ const initialState = {
   sortOrder: "newest_listings",
   priceMin: "",
   priceMax: "",
+  propertySubType: "",
 };
 
 export const filterSlice = createSlice({
@@ -27,6 +28,9 @@ export const filterSlice = createSlice({
       state.priceMin = action.payload.min;
       state.priceMax = action.payload.max;
     },
+    setPropertyType: (state, action) => {
+      state.propertySubType = action.payload;
+    },
     resetFilter: (state) => {
       state.locationValue = "Oxford, Oxfordshire";
       state.locationIdentifier = "oxford";
@@ -34,6 +38,7 @@ export const filterSlice = createSlice({
       state.sortOrder = "newest_listings";
       state.priceMin = "";
       state.priceMax = "";
+      state.propertySubType = "";
     },
   },
 });
@@ -43,6 +48,7 @@ export const {
   setPage,
   setPriceRange,
   setSortOrder,
+  setPropertyType,
   resetFilter,
 } = filterSlice.actions;
 

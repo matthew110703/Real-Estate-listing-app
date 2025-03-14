@@ -9,13 +9,14 @@ import { IoSearch } from "react-icons/io5";
 import { MdFilterList, MdFilterListOff } from "react-icons/md";
 
 // Constants
-import { sortOptions } from "../../lib/constants";
+import { sortOptions, propertyTypes } from "../../lib/constants";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import {
   setSortOrder,
   setPriceRange as setPriceRangeAction,
+  setPropertyType,
   setLocation,
   resetFilter,
 } from "../../store/filterSlice";
@@ -24,9 +25,11 @@ import { useAutocompleteQuery } from "../../store/apiSlice";
 const SearchFilters = () => {
   const filtersRef = useRef(null);
   const dispatch = useDispatch();
-  const { sortOrder, locationValue: location } = useSelector(
-    (state) => state.filter,
-  );
+  const {
+    sortOrder,
+    locationValue: location,
+    propertySubType,
+  } = useSelector((state) => state.filter);
 
   const [openSearchResults, setOpenSearchResults] = useState(false);
   const [search, setSearch] = useState(location || "");
@@ -137,13 +140,22 @@ const SearchFilters = () => {
           />
         </div>
 
+        {/* By Property Type */}
+        <Select
+          name={"propertyType"}
+          label={"Property Type"}
+          options={propertyTypes}
+          className={"max-w-sm"}
+          value={propertySubType || "ALL"}
+          onChange={(e) => dispatch(setPropertyType(e.target.value))}
+        />
+
         {/* Sort By */}
         <Select
           name={"sort"}
           label={"Sort By"}
           options={sortOptions}
           className={"max-w-sm"}
-          defaultValue={sortOptions[0]}
           value={sortOrder}
           onChange={(e) => dispatch(setSortOrder(e.target.value))}
         />

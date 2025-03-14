@@ -5,28 +5,15 @@ export const sortOptions = [
   { label: "Most Reduced", value: "most_reduced" },
 ];
 
-export const locationOptions = [
-  { label: "London", value: "London" },
-  { label: "Manchester", value: "Manchester" },
-
-  { label: "Birmingham", value: "Birmingham" },
-  { label: "Liverpool", value: "Liverpool" },
-  { label: "Leeds", value: "Leeds" },
-  { label: "Sheffield", value: "Sheffield" },
-  { label: "Bristol", value: "Bristol" },
-  { label: "Newcastle", value: "Newcastle" },
-  { label: "Nottingham", value: "Nottingham" },
-  { label: "Southampton", value: "Southampton" },
-  { label: "Leicester", value: "Leicester" },
-  { label: "Cardiff", value: "Cardiff" },
-  { label: "Bournemouth", value: "Bournemouth" },
-  { label: "Oxford", value: "Oxford" },
-  { label: "Cambridge", value: "Cambridge" },
-  { label: "Reading", value: "Reading" },
-  { label: "Brighton", value: "Brighton" },
-  { label: "Exeter", value: "Exeter" },
-  { label: "York", value: "York" },
-  { label: "Aberdeen", value: "Aberdeen" },
+export const propertyTypes = [
+  { value: "", label: "All" },
+  { value: "park_home", label: "Park Home" },
+  { value: "bungalow", label: "Bungalow" },
+  { value: "farms_land", label: "Farms/Land" },
+  { value: "terraced", label: "Terraced" },
+  { value: "flats", label: "Flats" },
+  { value: "semi_detached", label: "Semi-Detached" },
+  { value: "detached", label: "Detached" },
 ];
 
 export const quickLinks = {
