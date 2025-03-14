@@ -1,14 +1,39 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 // Layout
 import { Header, Footer, SearchFilters } from "../components/layout";
 // UI
 import { Button, Hero, PropertyCard, AgentCard } from "../components/ui";
+
+// Firebase
+import { auth } from "../lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+
+// Redux
+// import { useDispatch } from "react-redux";
+// import { setToast } from "../store/toastSlice";
 
 // Constants
 import { agents } from "../lib/constants";
 import listings from "../lib/listings.json";
 
 const Dashboard = () => {
-  console.log(listings?.data?.listings?.regular[0]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Redirect to login
+        console.log("User not logged in");
+        // Redirect
+        navigate("/");
+      }
+    });
+
+    return unsubscribe;
+  }, [navigate]);
+
   return (
     <>
       <Header />

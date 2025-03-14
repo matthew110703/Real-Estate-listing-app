@@ -37,7 +37,7 @@ const LoginForm = ({ onSubmit, loading = false }) => {
     });
   };
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-y-8">
+    <form onSubmit={handleSubmit} className="flex min-w-sm flex-col gap-y-8">
       <Input
         type="email"
         name="email"
@@ -51,7 +51,7 @@ const LoginForm = ({ onSubmit, loading = false }) => {
       <Input
         type={showPassword ? "text" : "password"}
         name="password"
-        label="Create Password"
+        label="Password"
         placeholder="••••••••"
         startAdornment={<TbLockPassword size={24} />}
         endAdornment={

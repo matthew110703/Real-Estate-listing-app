@@ -1,10 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // UI
 import { Button } from "../ui";
 
 // Icons
 import { BiBuildingHouse } from "react-icons/bi";
+
+// Firebase
+import { auth } from "../../lib/firebase";
+import { signOut } from "firebase/auth";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { setToast } from "../../store/toastSlice";
 
 const navLinks = [
   { id: 1, title: "Home", path: "/dashboard" },
@@ -14,6 +22,24 @@ const navLinks = [
 ];
 
 const Header = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // Dispatch
+      dispatch(
+        setToast({ message: "Logged out successfully", type: "success" }),
+      );
+      // Redirect
+      navigate("/");
+    } catch (error) {
+      // Dispatch
+      dispatch(setToast({ message: error.message, type: "error" }));
+    }
+  };
+
   return (
     <header className="container mx-auto flex items-center justify-between p-6 shadow-lg">
       <Link to="/dashboard">
@@ -39,7 +65,7 @@ const Header = () => {
 
       <div className="flex gap-x-4">
         <button className="text-sm">Contact Us</button>
-        <Button text={"Logout"} />
+        <Button text={"Logout"} onClick={handleLogout} />
       </div>
     </header>
   );
