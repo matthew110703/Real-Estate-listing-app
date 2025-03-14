@@ -146,7 +146,7 @@ const SearchFilters = () => {
           label={"Property Type"}
           options={propertyTypes}
           className={"max-w-sm"}
-          value={propertySubType || "ALL"}
+          value={propertySubType}
           onChange={(e) => dispatch(setPropertyType(e.target.value))}
         />
 
@@ -160,7 +160,7 @@ const SearchFilters = () => {
           onChange={(e) => dispatch(setSortOrder(e.target.value))}
         />
 
-        <div className="flex flex-none items-center gap-x-4">
+        <div className="flex flex-none items-center gap-x-4 max-md:mt-3 max-md:justify-center">
           {/* Filter Button */}
           <Button
             text={"Filter"}
@@ -169,10 +169,11 @@ const SearchFilters = () => {
             hidden={!(priceRange?.min && priceRange?.max)}
           />
           {/* Reset Button */}
-          <Button
-            text={"Reset"}
+          <IconButton
             icon={<MdFilterListOff />}
-            className={priceRange?.min || priceRange?.max ? "" : "hidden"}
+            className={
+              priceRange?.min || priceRange?.max ? "border p-2" : "hidden"
+            }
             onClick={() => {
               dispatch(resetFilter());
               setPriceRange({ min: "", max: "" });
