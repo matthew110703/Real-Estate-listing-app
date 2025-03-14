@@ -68,7 +68,7 @@ const LoginForm = ({ onSubmit, loading = false }) => {
       />
       <Button
         type={"submit"}
-        text={loading ? "Loading..." : "Sign Up"}
+        text={loading ? "Loading..." : "Login"}
         icon={!loading && <MdLogin size={24} />}
         disabled={loading}
       />
