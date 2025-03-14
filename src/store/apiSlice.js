@@ -3,10 +3,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: `https://${import.meta.env.VITE_RAPIDAPI_HOST}`,
+    baseUrl: `https://zoopla.p.rapidapi.com`,
     prepareHeaders: (headers) => {
       headers.set("x-rapidapi-key", import.meta.env.VITE_RAPIDAPI_KEY);
-      headers.set("x-rapidapi-host", import.meta.env.VITE_RAPIDAPI_HOST);
+      headers.set("x-rapidapi-host", "zoopla.p.rapidapi.com");
       return headers;
     },
   }),
